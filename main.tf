@@ -1,6 +1,14 @@
 provider "local" {
   # Configuration options
 }
+provider "aws"{
+  region = "ap-northeast-2"
+}
+
+resource "aws-vpc" "foo"{
+  cidr_block = "10.0.0.0/16"
+}
+
 resource "local_file" "foo" {
     filename = "${path.module}/foo.txt"
     content     = "Hello World!"
