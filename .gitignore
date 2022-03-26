@@ -30,4 +30,4 @@ override.tf.json
 foo.txt
 bar.txt
 
-.terraform.lcok.hcl
+.terraform.lock.hcl
