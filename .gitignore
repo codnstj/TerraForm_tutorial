@@ -29,3 +29,5 @@ override.tf.json
 # example: *tfplan*
 foo.txt
 bar.txt
+
+.terraform.lcok.hcl
