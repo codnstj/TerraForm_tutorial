@@ -96,29 +96,30 @@ resource "aws_nat_gateway" "terraform-vpc-nat" {
   // ]
 }
 
+// main routetable 에 igw 연결
 resource "aws_route" "internet-access"{
   route_table_id = "${aws_vpc.terraform-vpc.main_route_table_id}"
   destination_cidr_block = "0.0.0.0/0"
   gateway_id = "${aws_internet_gateway.terraform-vpc-igw.id}"
 }
 
-resource "aws_route" "internet_access" {
-  route_table_id = "${aws_vpc.terraform-vpc.main_route_table_id}"
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id = "${aws_internet_gateway.terraform-vpc-igw.id}"
-}
 
+// private routetable 생성
 resource "aws_route_table" "terraform-private-routetable" {
   vpc_id = aws_vpc.terraform-vpc.id
   tags = {
     "Name" = "private"
   }
 }
+
+// private routetable 에 ngw 연결
 resource "aws_route" "private-route" {
   route_table_id = aws_route_table.terraform-private-routetable.id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id = aws_nat_gateway.terraform-vpc-nat.id
 }
+
+// 라우팅 테이블을 서브넷에 연결
 
 resource "aws_route_table_association" "terraform-pub-1-association" {
   subnet_id = aws_subnet.pub-1.id
