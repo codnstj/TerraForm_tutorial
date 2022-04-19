@@ -108,4 +108,34 @@ resource "aws_route" "internet_access" {
   gateway_id = "${aws_internet_gateway.terraform-vpc-igw.id}"
 }
 
+resource "aws_route_table" "terraform-private-routetable" {
+  vpc_id = aws_vpc.terraform-vpc.id
+  tags = {
+    "Name" = "private"
+  }
+}
+resource "aws_route" "private-route" {
+  route_table_id = aws_route_table.terraform-private-routetable.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id = aws_nat_gateway.terraform-vpc-nat.id
+}
 
+resource "aws_route_table_association" "terraform-pub-1-association" {
+  subnet_id = aws_subnet.pub-1.id
+  route_table_id = aws_vpc.terraform-vpc.main_route_table_id
+}
+
+resource "aws_route_table_association" "terraform-pub2-association" {
+  subnet_id = aws_subnet.pub2.id
+  route_table_id = aws_vpc.terraform-vpc.main_route_table_id
+}
+
+resource "aws_route_table_association" "terraform-priv-1-association" {
+  subnet_id = aws_subnet.priv1.id
+  route_table_id = aws_route_table.terraform-private-routetable.id
+}
+
+resource "aws_route_table_association" "terraform-priv-2-association" {
+  subnet_id = aws_subnet.priv2.id
+  route_table_id = aws_route_table.terraform-private-routetable.id
+}
