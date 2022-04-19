@@ -14,7 +14,9 @@ provider "aws" {
   region  = "ap-northeast-2"
 }
 data "aws_availability_zones" "available"{}
-data "aws_ami" "ubuntu" {}
+/* data "aws_ami" "ubuntu" {
+  owners = [ "value" ]
+} */ 
 
 resource "aws_vpc" "terraform-vpc" {
   cidr_block = "10.0.0.0/16"
@@ -29,7 +31,7 @@ resource "aws_vpc" "terraform-vpc" {
 
 resource "aws_default_route_table" "terraform-vpc"{
   default_route_table_id = "${aws_vpc.terraform-vpc.default_route_table_id}"
-  tags {
+  tags = {
     Name = "Public_route"
   }
 }
@@ -71,30 +73,39 @@ resource "aws_subnet" "priv2"{
 }
 
 resource "aws_internet_gateway" "terraform-vpc-igw"{
-  vpc_id = "${aws.vpc.terraform-vpc.id}"
+  vpc_id = "${aws_vpc.terraform-vpc.id}"
   tags = {
     "Name" = "terraform-igw"
   }
 }
 
+//Eip for NAT 
+resource "aws_eip" "terraform-vpc-ngw" {
+  vpc = true
+  // depends_on = [
+  //   "aws_internet_gateway.terraform-vpc-igw"
+  //   ]
+}
+
+//Nat GateWay
+resource "aws_nat_gateway" "terraform-vpc-nat" {
+  allocation_id = aws_eip.terraform-vpc-ngw.id
+  subnet_id = aws_subnet.pub-1.id
+  // depends_on = [
+  //   "aws_internet_gateway.terraform-vpc-igw"
+  // ]
+}
+
 resource "aws_route" "internet-access"{
   route_table_id = "${aws_vpc.terraform-vpc.main_route_table_id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id = "${aws_internetgateway.terraform-vpc.id}"
+  gateway_id = "${aws_internet_gateway.terraform-vpc-igw.id}"
 }
 
-resource "aws_eip" "terraform-vpc-eip" {
-  vpc = true
-  depends_on = ["aws_internet_gateway.terraform-vpc-igw"]
-}
-resource "aws_nat_gateway" "terraform-vpc-ngw" {
-  allocation_id = aws_eip.terraform-vpc-eip.id
-  tags = {
-    "Name" = "igw"
-  }
-}
 resource "aws_route" "internet_access" {
   route_table_id = "${aws_vpc.terraform-vpc.main_route_table_id}"
   destination_cidr_block = "0.0.0.0/0"
   gateway_id = "${aws_internet_gateway.terraform-vpc-igw.id}"
 }
+
+
