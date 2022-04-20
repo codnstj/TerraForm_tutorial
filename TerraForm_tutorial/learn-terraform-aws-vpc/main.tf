@@ -140,3 +140,25 @@ resource "aws_route_table_association" "terraform-priv-2-association" {
   subnet_id = aws_subnet.priv2.id
   route_table_id = aws_route_table.terraform-private-routetable.id
 }
+
+resource "aws_default_security_group" "terraform-default" {
+  vpc_id = aws_vpc.terraform-vpc.id
+  ingress  {
+    description = "from-port 0, to-port 0"
+    from_port = 0
+    protocol = -1
+    self = true
+    to_port = 0
+  }
+  egress  {
+    description = "from_port 0, to-port 0"
+    protocol = -1
+    from_port = 0
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    "Name" = "Default"
+  }
+}
