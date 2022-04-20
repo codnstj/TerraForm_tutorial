@@ -193,7 +193,6 @@ resource "aws_network_acl" "terraform-public" {
     "Name" = "public"
   }
 }
-
 resource "aws_network_acl_rule" "terraform_public_ingerss80" {
   network_acl_id = aws_network_acl.terraform-public.id
   rule_number = 100
