@@ -185,3 +185,32 @@ resource "aws_default_network_acl" "terraform-default" {
     "Name" = "default"
   }
 }
+
+resource "aws_network_acl" "terraform-public" {
+  vpc_id = aws_vpc.terraform-vpc.id
+  subnet_ids = [ aws_subnet.pub-1.id,aws_subnet.pub2.id ]
+  tags = {
+    "Name" = "public"
+  }
+}
+
+resource "aws_network_acl_rule" "terraform_public_ingerss80" {
+  network_acl_id = aws_network_acl.terraform-public.id
+  rule_number = 100
+  rule_action = "allow"
+  egress = false
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 80 
+  to_port = 80
+}
+resource "aws_network_acl_rule" "terraform_public_egerss80" {
+  network_acl_id = aws_network_acl.terraform-public.id
+  rule_number = 100
+  rule_action = "allow"
+  egress = true
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 80 
+  to_port = 80
+}
