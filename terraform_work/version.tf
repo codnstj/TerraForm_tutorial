@@ -7,7 +7,7 @@ terraform {
   backend "remote" {
     organization = "codns"
     workspaces {
-      name = "terraform_work"
+      name = "TerraForm_tutorial"
     }
   }
   required_providers {
