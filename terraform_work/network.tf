@@ -5,7 +5,7 @@ resource "aws_vpc" "ecs_cluster_vpc" {
   cidr_block = "10.0.0.0/16"
 }
 resource "aws_subnet" "ecs_subnet_pub" {
-  vpc_id = aws_vpc.ecs_cluster_vpc
+  vpc_id = aws_vpc.ecs_cluster_vpc.id
   count = 2
   cidr_block = "10.30.${10 + count.index}.0/24"
   availability_zone = "ap-northeast-2a"
