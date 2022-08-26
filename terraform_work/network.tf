@@ -7,7 +7,7 @@ resource "aws_vpc" "ecs_cluster_vpc" {
 resource "aws_subnet" "ecs_subnet_pub" {
   vpc_id = aws_vpc.ecs_cluster_vpc.id
   count = 2
-  cidr_block = "10.30.${10 + count.index}.0/24"
+  cidr_block = "10.30.${count.index}.0/24"
   availability_zone = "ap-northeast-2a"
   tags = {
     "Name" = "ecs_subnet_${1 + count.index}"
@@ -17,7 +17,7 @@ resource "aws_subnet" "ecs_subnet_pub" {
 resource "aws_subnet" "ecs_subnet_priv" {
   vpc_id = aws_vpc.ecs_cluster_vpc.id
   count = 2
-  cidr_block = "10.30.${12 + count.index}.0/24"
+  cidr_block = "10.30.${10 + count.index}.0/24"
   availability_zone = "ap-northeast-2c"
   tags = {
     "Name" = "ecs_subnet_${2 + count.index}"
