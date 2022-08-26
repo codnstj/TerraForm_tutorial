@@ -3,12 +3,12 @@ provider "aws" {
 }
 
 terraform {
-  backend "remote" {
-    organization = "codns"
-    workspaces {
-      name = "TerraForm_tutorial"
-    }
-  }
+  # backend "remote" {
+  #   organization = "codns"
+  #   workspaces {
+  #     name = "TerraForm_tutorial"
+  #   }
+  # }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
