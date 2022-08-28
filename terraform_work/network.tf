@@ -30,7 +30,7 @@ resource "aws_subnet" "priv" {
   }
 }
 
-resource "aws_eip" "nat_gw" {
+resource "aws_eip" "eip_nat" {
   vpc = true
   lifecycle {
     create_before_destroy = true
@@ -39,7 +39,7 @@ resource "aws_eip" "nat_gw" {
 }
 
 resource "aws_nat_gateway" "ecs_ngw" {
-  allocation_id = aws_eip.nat_gw.id
+  allocation_id = aws_eip.eip_nat.id
   connectivity_type = "private"
   subnet_id = element(aws_subnet.pub.*.id ,0)
 }
