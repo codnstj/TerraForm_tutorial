@@ -6,6 +6,7 @@ provider "aws" {
 terraform {
   backend "remote" {
     organization = "codns"
+    hostname = "terraform.io"
     workspaces {
       name = "TerraForm_tutorial"
     }
