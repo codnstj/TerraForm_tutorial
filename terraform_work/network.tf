@@ -32,9 +32,10 @@ resource "aws_subnet" "priv" {
 
 resource "aws_eip" "nat_gw" {
   vpc = true
-  depends_on = [
-    "aws_internet_gateway.ecs_igw"
-  ]
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
 
 resource "aws_nat_gateway" "ecs_ngw" {
